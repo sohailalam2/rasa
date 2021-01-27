@@ -75,14 +75,14 @@ from tests.nlu.conftest import DEFAULT_DATA_PATH
 from tests.nlu.utilities import write_file_config
 
 
-@pytest.yield_fixture(scope="session")
+@pytest.yield_fixture(scope="function")
 def event_loop(request: Request) -> Iterator[asyncio.AbstractEventLoop]:
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def loop():
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)

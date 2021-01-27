@@ -62,7 +62,7 @@ from rasa.utils.endpoints import ClientResponseError, EndpointConfig
 from tests.utilities import json_of_latest_request, latest_request
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def template_nlg() -> TemplatedNaturalLanguageGenerator:
     templates = {
         "utter_ask_rephrase": [{"text": "can you rephrase that?"}],
@@ -82,7 +82,7 @@ def template_nlg() -> TemplatedNaturalLanguageGenerator:
     return TemplatedNaturalLanguageGenerator(templates)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def template_sender_tracker(default_domain_path: Text):
     domain = Domain.load(default_domain_path)
     return DialogueStateTracker("template-sender", domain.slots)

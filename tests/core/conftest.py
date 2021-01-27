@@ -96,14 +96,14 @@ class MockedMongoTrackerStore(MongoTrackerStore):
 # https://github.com/pytest-dev/pytest-asyncio/issues/68
 # this event_loop is used by pytest-asyncio, and redefining it
 # is currently the only way of changing the scope of this fixture
-@pytest.yield_fixture(scope="session")
+@pytest.yield_fixture(scope="function")
 def event_loop(request: Request) -> Generator[asyncio.AbstractEventLoop, None, None]:
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def loop() -> Generator[asyncio.AbstractEventLoop, None, None]:
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
@@ -112,22 +112,22 @@ def loop() -> Generator[asyncio.AbstractEventLoop, None, None]:
     loop.close()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def default_domain_path() -> Text:
     return DEFAULT_DOMAIN_PATH_WITH_SLOTS
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def default_stories_file() -> Text:
     return DEFAULT_STORIES_FILE
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def default_stack_config() -> Text:
     return DEFAULT_STACK_CONFIG
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def default_nlu_data():
     from tests.conftest import DEFAULT_NLU_DATA
 
@@ -202,7 +202,7 @@ def default_tracker(default_domain: Domain) -> DialogueStateTracker:
     return DialogueStateTracker("my-sender", default_domain.slots)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def form_bot_agent(trained_async: Callable) -> Agent:
     endpoint = EndpointConfig("https://example.com/webhooks/actions")
 
@@ -218,7 +218,7 @@ async def form_bot_agent(trained_async: Callable) -> Agent:
     return Agent.load_local_model(zipped_model, action_endpoint=endpoint)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def response_selector_agent(trained_async: Callable) -> Agent:
     zipped_model = await trained_async(
         domain="examples/responseselectorbot/domain.yml",

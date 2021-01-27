@@ -1652,12 +1652,12 @@ def test_immediate_submit():
     assert_predicted_action(prediction, domain, submit_action_name)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def trained_rule_policy_domain() -> Domain:
     return Domain.load("examples/rules/domain.yml")
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def trained_rule_policy(trained_rule_policy_domain: Domain) -> RulePolicy:
     trackers = await training.load_data(
         "examples/rules/data/rules.yml", trained_rule_policy_domain

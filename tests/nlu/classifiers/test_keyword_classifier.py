@@ -12,7 +12,7 @@ from rasa.shared.nlu.training_data.message import Message
 from tests.nlu.conftest import DEFAULT_DATA_PATH
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def training_data():
     return rasa.shared.nlu.training_data.loading.load_data(DEFAULT_DATA_PATH)
 
@@ -22,7 +22,7 @@ class ClassifierTestCollection:
 
     Each classifier can have additional tests in its own class."""
 
-    @pytest.fixture(scope="module")
+    @pytest.fixture(scope="function")
     def classifier_class(self):
         return NotImplementedError
 
@@ -30,7 +30,7 @@ class ClassifierTestCollection:
     def filename(self, classifier_class):
         return "component_0_" + classifier_class.name
 
-    @pytest.fixture(scope="module")
+    @pytest.fixture(scope="function")
     def trained_classifier(
         self, classifier_class, training_data, component_config, **kwargs
     ):
@@ -56,7 +56,7 @@ class ClassifierTestCollection:
         classifier.train(training_data, {}, **train_params)
         return classifier
 
-    @pytest.fixture(scope="module")
+    @pytest.fixture(scope="function")
     def component_config(self):
         return {}
 
@@ -79,7 +79,7 @@ class ClassifierTestCollection:
 
 
 class TestKeywordClassifier(ClassifierTestCollection):
-    @pytest.fixture(scope="module")
+    @pytest.fixture(scope="function")
     def classifier_class(self):
         return KeywordIntentClassifier
 

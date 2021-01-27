@@ -10,19 +10,19 @@ from tests.nlu.utilities import write_file_config
 DEFAULT_DATA_PATH = "data/examples/rasa/demo-rasa.json"
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def spacy_nlp_component(component_builder, blank_config):
     spacy_nlp_config = {"name": "SpacyNLP"}
     return component_builder.create_component(spacy_nlp_config, blank_config)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def mitie_feature_extractor(component_builder: ComponentBuilder, blank_config):
     mitie_nlp_config = {"name": "MitieNLP"}
     return component_builder.create_component(mitie_nlp_config, blank_config).extractor
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def blank_config() -> RasaNLUModelConfig:
     return RasaNLUModelConfig({"language": "en", "pipeline": []})
 

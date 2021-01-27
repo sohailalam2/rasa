@@ -62,14 +62,14 @@ collect_ignore_glob = ["docs/*.py"]
 # https://github.com/pytest-dev/pytest-asyncio/issues/68
 # this event_loop is used by pytest-asyncio, and redefining it
 # is currently the only way of changing the scope of this fixture
-@pytest.yield_fixture(scope="session")
+@pytest.yield_fixture(scope="function")
 def event_loop(request: Request) -> Iterator[asyncio.AbstractEventLoop]:
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def _trained_default_agent(tmpdir_factory: TempdirFactory) -> Agent:
     model_path = tmpdir_factory.mktemp("model").strpath
 
@@ -96,7 +96,7 @@ async def default_agent(_trained_default_agent: Agent) -> Agent:
     return reset_conversation_state(_trained_default_agent)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def trained_moodbot_path(trained_async: Callable) -> Text:
     return await trained_async(
         domain="examples/moodbot/domain.yml",
@@ -105,7 +105,7 @@ async def trained_moodbot_path(trained_async: Callable) -> Text:
     )
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def trained_nlu_moodbot_path(trained_nlu_async: Callable) -> Text:
     return await trained_nlu_async(
         domain="examples/moodbot/domain.yml",
@@ -114,39 +114,39 @@ async def trained_nlu_moodbot_path(trained_nlu_async: Callable) -> Text:
     )
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def unpacked_trained_moodbot_path(
     trained_moodbot_path: Text,
 ) -> TempDirectoryPath:
     return get_model(trained_moodbot_path)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def stack_agent(trained_rasa_model: Text) -> Agent:
     return await load_agent(model_path=trained_rasa_model)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def core_agent(trained_core_model: Text) -> Agent:
     return await load_agent(model_path=trained_core_model)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def nlu_agent(trained_nlu_model: Text) -> Agent:
     return await load_agent(model_path=trained_nlu_model)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def default_domain_path() -> Text:
     return DEFAULT_DOMAIN_PATH_WITH_SLOTS
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def domain_with_categorical_slot_path() -> Text:
     return DOMAIN_WITH_CATEGORICAL_SLOT
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def _default_domain() -> Domain:
     return Domain.load(DEFAULT_DOMAIN_PATH_WITH_SLOTS)
 
@@ -156,52 +156,52 @@ def default_domain(_default_domain: Domain) -> Domain:
     return copy.deepcopy(_default_domain)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def default_stories_file() -> Text:
     return DEFAULT_STORIES_FILE
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def default_e2e_stories_file() -> Text:
     return DEFAULT_E2E_STORIES_FILE
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def simple_stories_file() -> Text:
     return SIMPLE_STORIES_FILE
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def default_stack_config() -> Text:
     return DEFAULT_STACK_CONFIG
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def default_nlu_data() -> Text:
     return DEFAULT_NLU_DATA
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def incorrect_nlu_data() -> Text:
     return INCORRECT_NLU_DATA
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def end_to_end_test_story_file() -> Text:
     return END_TO_END_STORY_FILE
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def default_config_path() -> Text:
     return DEFAULT_CONFIG_PATH
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def default_config(default_config_path) -> List[Policy]:
     return config.load(default_config_path)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def trained_async(tmpdir_factory: TempdirFactory) -> Callable:
     async def _train(
         *args: Any, output_path: Optional[Text] = None, **kwargs: Any
@@ -215,7 +215,7 @@ def trained_async(tmpdir_factory: TempdirFactory) -> Callable:
     return _train
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def trained_nlu_async(tmpdir_factory: TempdirFactory) -> Callable:
     async def _train_nlu(
         *args: Any, output_path: Optional[Text] = None, **kwargs: Any
@@ -228,7 +228,7 @@ def trained_nlu_async(tmpdir_factory: TempdirFactory) -> Callable:
     return _train_nlu
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def trained_rasa_model(
     trained_async: Callable,
     default_domain_path: Text,
@@ -244,7 +244,7 @@ async def trained_rasa_model(
     return trained_stack_model_path
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def trained_simple_rasa_model(
     trained_async: Callable,
     default_domain_path: Text,
@@ -260,7 +260,7 @@ async def trained_simple_rasa_model(
     return trained_stack_model_path
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def unpacked_trained_rasa_model(
     trained_rasa_model: Text,
 ) -> Generator[Text, None, None]:
@@ -268,7 +268,7 @@ async def unpacked_trained_rasa_model(
         yield path
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def trained_core_model(
     trained_async: Callable,
     default_domain_path: Text,
@@ -284,7 +284,7 @@ async def trained_core_model(
     return trained_core_model_path
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def trained_nlu_model(
     trained_async: Callable,
     default_domain_path: Text,
@@ -301,7 +301,7 @@ async def trained_nlu_model(
     return trained_nlu_model_path
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def trained_e2e_model(
     trained_async,
     default_domain_path,
@@ -316,7 +316,7 @@ async def trained_e2e_model(
     )
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def moodbot_domain() -> Domain:
     domain_path = os.path.join("examples", "moodbot", "domain.yml")
     return Domain.load(domain_path)
@@ -357,7 +357,7 @@ async def rasa_server_without_api() -> Sanic:
     return app
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def project() -> Text:
     import tempfile
     from rasa.cli.scaffold import create_initial_project
@@ -368,18 +368,18 @@ def project() -> Text:
     return directory
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def component_builder():
     return ComponentBuilder()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def spacy_nlp(component_builder: ComponentBuilder, blank_config: RasaNLUModelConfig):
     spacy_nlp_config = {"name": "SpacyNLP"}
     return component_builder.create_component(spacy_nlp_config, blank_config).nlp
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def blank_config() -> RasaNLUModelConfig:
     return RasaNLUModelConfig({"language": "en", "pipeline": []})
 

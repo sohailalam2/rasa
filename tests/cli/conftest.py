@@ -51,7 +51,7 @@ def create_simple_project(path: Path):
     return path
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def trained_simple_project(tmpdir_factory: TempdirFactory) -> Text:
     path = tmpdir_factory.mktemp("simple")
     create_simple_project(path)
