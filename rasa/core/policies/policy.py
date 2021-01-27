@@ -83,7 +83,7 @@ class SupportedData(Enum):
         return trackers
 
 
-class Policy:
+class Policy(metaclass=rasa.utils.common.RecordTrainingMetaClass):
     @staticmethod
     def supported_data() -> SupportedData:
         """The type of data supported by this policy.
@@ -193,6 +193,7 @@ class Policy:
 
         return state_features, label_ids, entity_tags
 
+    # TODO: record here
     def train(
         self,
         training_trackers: List[TrackerWithCachedStates],

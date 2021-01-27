@@ -212,3 +212,17 @@ def json_pickle(file_name: Union[Text, Path], obj: Any) -> None:
     jsonpickle_numpy.register_handlers()
 
     rasa.shared.utils.io.write_text_file(jsonpickle.dumps(obj), file_name)
+
+
+def write_test_name(filename='train_tests.json'):
+    test_name = os.environ.get('PYTEST_CURRENT_TEST').split(' ')[0].split('[')[0]
+    print(f"************** {test_name} ****************")
+    print(f"writing to {filename}")
+    try:
+        tests_names = rasa.shared.utils.io.read_json_file(filename)
+    except:
+        tests_names = []
+    test_name_set = set(tests_names)
+    test_name_set.add(test_name)
+    tests_names = list(test_name_set)
+    rasa.shared.utils.io.dump_obj_as_json_to_file(filename, tests_names)

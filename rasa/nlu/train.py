@@ -11,7 +11,6 @@ from rasa.shared.nlu.training_data.loading import load_data
 from rasa.utils import io as io_utils
 from rasa.utils.endpoints import EndpointConfig
 
-
 if typing.TYPE_CHECKING:
     from rasa.shared.importers.importer import TrainingDataImporter
     from rasa.shared.nlu.training_data.training_data import TrainingData
@@ -85,6 +84,8 @@ async def train(
     model_to_finetune: Optional[Interpreter] = None,
     **kwargs: Any,
 ) -> Tuple[Trainer, Interpreter, Optional[Text]]:
+    io_utils.write_test_name()
+
     """Loads the trainer and the data and runs the training of the model."""
     from rasa.shared.importers.importer import TrainingDataImporter
 

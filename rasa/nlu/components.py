@@ -4,6 +4,7 @@ import logging
 import typing
 from typing import Any, Dict, Hashable, List, Optional, Set, Text, Tuple, Type, Iterable
 
+import rasa.utils.common
 import rasa.utils.train_utils
 from rasa.exceptions import MissingDependencyException
 from rasa.shared.exceptions import RasaException
@@ -356,17 +357,7 @@ class UnsupportedLanguageError(RasaException):
         )
 
 
-class ComponentMetaclass(type):
-    """Metaclass with `name` class property."""
-
-    @property
-    def name(cls):
-        """The name property is a function of the class - its __name__."""
-
-        return cls.__name__
-
-
-class Component(metaclass=ComponentMetaclass):
+class Component(metaclass=rasa.utils.common.RecordTrainingMetaClass):
     """A component is a message processing unit in a pipeline.
 
     Components are collected sequentially in a pipeline. Each component
@@ -396,7 +387,7 @@ class Component(metaclass=ComponentMetaclass):
     def name(self) -> Text:
         """Access the class's property name from an instance."""
 
-        return type(self).name
+        return self.__class__.__name__
 
     # Which components are required by this component.
     # Listed components should appear before the component itself in the pipeline.
@@ -543,6 +534,7 @@ class Component(metaclass=ComponentMetaclass):
 
         pass
 
+    # TODO: record here
     def train(
         self,
         training_data: TrainingData,

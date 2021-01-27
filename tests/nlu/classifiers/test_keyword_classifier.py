@@ -79,7 +79,7 @@ class ClassifierTestCollection:
 
 
 class TestKeywordClassifier(ClassifierTestCollection):
-    @pytest.fixture(scope="function")
+    @pytest.fixture(scope="module")
     def classifier_class(self):
         return KeywordIntentClassifier
 

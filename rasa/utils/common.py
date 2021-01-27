@@ -312,3 +312,32 @@ def run_in_loop(
     loop.run_until_complete(asyncio.gather(*pending))
 
     return result
+
+
+from functools import wraps
+
+
+class RecordTrainingMetaClass(type):
+    method_names = ["train"]
+
+    @property
+    def name(cls):
+        """The name property is a function of the class - its __name__."""
+
+        return cls.__name__
+
+    @staticmethod
+    def record_test_name(f):
+        @wraps(f)
+        def decorated(*args, **kwargs):
+            rasa.utils.io.write_test_name(filename='train_tests_meta.json')
+            return f(*args, **kwargs)
+
+        return decorated
+
+    def __new__(cls, classname, bases, classdict):
+        for attr, item in classdict.items():
+            if callable(item) and attr in cls.method_names:
+                classdict[attr] = cls.record_test_name(item)  # replace method by wrapper
+
+        return type.__new__(cls, classname, bases, classdict)
